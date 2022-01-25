@@ -11,19 +11,19 @@ type Book struct {
 	Author string
 }
 
-type InMemoryBookDatabse struct {
+type InMemoryBookDatabase struct {
 	store []Book
 }
 
-func NewInMemoryBookDatabase() *InMemoryBookDatabse {
-	return &InMemoryBookDatabse{store: []Book{}}
+func NewInMemoryBookDatabase() *InMemoryBookDatabase {
+	return &InMemoryBookDatabase{store: []Book{}}
 }
 
-func (db *InMemoryBookDatabse) GetAllBooks() *[]Book {
+func (db *InMemoryBookDatabase) GetAllBooks() *[]Book {
 	return &db.store
 }
 
-func (db *InMemoryBookDatabse) GetBook(ID int) (*Book, error) {
+func (db *InMemoryBookDatabase) GetBook(ID int) (*Book, error) {
 	if ID > 0 && ID <= len(db.store) {
 		return &db.store[ID-1], nil
 	} else if ID > len(db.store) {
@@ -33,7 +33,7 @@ func (db *InMemoryBookDatabse) GetBook(ID int) (*Book, error) {
 	}
 }
 
-func (db *InMemoryBookDatabse) AddBook(title string, author string) *Book {
+func (db *InMemoryBookDatabase) AddBook(title string, author string) *Book {
 	newBookId := len(db.store) + 1
 	newBook := Book{
 		ID:     newBookId,

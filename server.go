@@ -6,21 +6,21 @@ import (
 	"strconv"
 )
 
-type BookDatabse interface {
+type BookDatabase interface {
 	GetAllBooks() *[]Book
 	GetBook(ID int) (*Book, error)
 	AddBook(title string, author string) *Book
 }
 
 type BooksServer struct {
-	BookDatabse
+	BookDatabase
 	http.Handler
 }
 
-func NewBooksServer(bookDatabase BookDatabse) *BooksServer {
+func NewBooksServer(bookDatabase BookDatabase) *BooksServer {
 	b := new(BooksServer)
 
-	b.BookDatabse = bookDatabase
+	b.BookDatabase = bookDatabase
 
 	router := http.NewServeMux()
 	router.Handle("/books", http.HandlerFunc(b.booksHandler))
@@ -42,7 +42,7 @@ func (b *BooksServer) booksHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (b *BooksServer) getAllBooksHandler(w http.ResponseWriter, r *http.Request) {
-	sendJson(w, b.BookDatabse.GetAllBooks())
+	sendJson(w, b.BookDatabase.GetAllBooks())
 }
 
 func (b *BooksServer) getBookHandler(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +58,7 @@ func (b *BooksServer) getBookHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book, err := b.BookDatabse.GetBook(bookID)
+	book, err := b.BookDatabase.GetBook(bookID)
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -85,7 +85,7 @@ func (b *BooksServer) addBookHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
-	book := b.BookDatabse.AddBook(br.Title, br.Author)
+	book := b.BookDatabase.AddBook(br.Title, br.Author)
 
 	sendJson(w, book)
 }
