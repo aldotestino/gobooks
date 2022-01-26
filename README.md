@@ -4,23 +4,39 @@ Simple API made with Go
 
 ## How to run
 
+1. Build (*)
 ```sh
-go run cmd/main.go
+docker compose build
 ```
 
-## How to build
-
-```sh
-go build cmd/main.go
-```
-
-## How to run with Docker
-
+2. Start 
 ```sh
 docker compose up
 ```
 
-## Add a book
+3. Enter `db` container and create `gobooksdb` database (*)
+```sh
+docker exec -it db psql -U postgres
+```
+
+```sql
+CREATE DATABASE gobooksdb;
+```
+
+4. Enter `gobooks-api` container and run the migration (*)
+```sh
+docker exec -it gobooks-api /bin/bash
+```
+
+```sh
+go run src/cmd/db/migrate.go
+```
+
+(*) Run the steps  [1, 3, 4] only the first time
+
+## Usage
+
+### Add a book
 
 ```sh
 curl -X POST -H "Content-Type: application/json" \ 
@@ -28,12 +44,12 @@ curl -X POST -H "Content-Type: application/json" \
   http://localhost:8080/books
 ```
 
-## Get a book
+### Get a book
 
 ```sh
 curl  http://localhost:8080/book/[id]
 ```
-## Get all books
+### Get all books
 
 ```sh
 curl  http://localhost:8080/books

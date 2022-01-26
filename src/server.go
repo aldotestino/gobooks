@@ -1,15 +1,16 @@
 package gobooks
 
 import (
+	models "app/src/models"
 	"encoding/json"
 	"net/http"
 	"strconv"
 )
 
 type BookDatabase interface {
-	GetAllBooks() *[]Book
-	GetBook(ID int) (*Book, error)
-	AddBook(title string, author string) *Book
+	GetAllBooks() *[]models.Book
+	GetBook(ID int64) (*models.Book, error)
+	AddBook(title string, author string) *models.Book
 }
 
 type BooksServer struct {
@@ -58,7 +59,7 @@ func (b *BooksServer) getBookHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book, err := b.BookDatabase.GetBook(bookID)
+	book, err := b.BookDatabase.GetBook(int64(bookID))
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)

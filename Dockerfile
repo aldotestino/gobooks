@@ -1,4 +1,4 @@
 FROM golang
 WORKDIR /usr/app/gobooks
 COPY . .
-CMD go run cmd/main.go
+CMD go run src/cmd/main.go
