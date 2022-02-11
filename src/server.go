@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+
+	"github.com/rs/cors"
 )
 
 type BookDatabase interface {
@@ -24,10 +26,11 @@ func NewBooksServer(bookDatabase BookDatabase) *BooksServer {
 	b.BookDatabase = bookDatabase
 
 	router := http.NewServeMux()
+	router.Handle("/", http.FileServer(http.Dir("./public")))
 	router.Handle("/books", http.HandlerFunc(b.booksHandler))
 	router.Handle("/book/", http.HandlerFunc(b.getBookHandler))
 
-	b.Handler = router
+	b.Handler = cors.AllowAll().Handler(router)
 	return b
 }
 
